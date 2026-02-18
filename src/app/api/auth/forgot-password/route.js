@@ -1,0 +1,37 @@
+import { createClient } from "../../../../lib/supabase/server";
+import { NextResponse } from "next/server";
+
+// POST /api/auth/forgot-password — Send password reset email
+export async function POST(request) {
+  try {
+    const body = await request.json();
+    const { email } = body;
+
+    if (!email) {
+      return NextResponse.json(
+        { error: "Email is required." },
+        { status: 400 }
+      );
+    }
+
+    const supabase = await createClient();
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?type=recovery`,
+    });
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Password reset email sent! Check your inbox.",
+    });
+  } catch (err) {
+    return NextResponse.json(
+      { error: "Something went wrong." },
+      { status: 500 }
+    );
+  }
+}

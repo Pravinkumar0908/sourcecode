@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: codevault-web
+    env: docker
+    branch: main
+    docker:
+      dockerfilePath: Dockerfile
+    plan: free
+    autoDeploy: true
+    envVars:
+      # Fill these on Render dashboard or via the Render CLI; DO NOT commit secrets here.
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        value: ""
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        value: ""
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: ""
+      - key: DATABASE_URL
+        value: ""
+      - key: NODE_ENV
+        value: production
